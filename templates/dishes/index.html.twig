@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+
+{% block body %}
+
+    {# Flash Messages #}
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success">
+            {{ message }}
+        </div>
+    {% endfor %}
+    {# Display All dishes #}
+    <div class="container">
+   
+    <h3>Dishes Detail</h3>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <td>Order No: </td>
+                <td>Dish Name:</td>
+                <td>Dish Detail: </td>
+                <td>Dish Price: </td>
+                <td>Delete </td>
+                <td> <a href="{{ path('appdishes.create') }}">Create</a></td>
+            </tr>
+        </thead>
+        <tbody>
+            {% for dish in dishes %}
+                <tr>
+                    <td>{{ dish.id }}</td>
+                    <td>{{ dish.name }}</td>
+                    <td>{{ dish.description }}</td>
+                    <td>{{ dish.Price }}</td>
+                    <td><a href="{{ path('appdishes.delete', {id : dish.id}) }}">Delete</a></td>
+                    <td>X2</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    </div>
+{% endblock %}
