@@ -11,6 +11,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\String\Slugger\SluggerInterface;
 
 // Main Router to handle all
 /**
@@ -38,7 +39,7 @@ class DishesController extends AbstractController
      * @return Response
      * @Route("/create", name="create")
      */
-    public function create(Request $request, ManagerRegistry $doctrine): Response
+    public function create(Request $request, ManagerRegistry $doctrine, SluggerInterface $slugger): Response
     {
         // Create Dish
         $dish = new Dishes();
@@ -53,8 +54,32 @@ class DishesController extends AbstractController
         
         if ($form->isSubmitted() && $form->isValid()){
             $entityManager = $doctrine->getManager();
+
+            // Image Upload
+            $imagefile = $form->get('attachment')->getData();
+            if($imagefile){
+                $originalFileName = pathinfo($imagefile->getClientOriginalName(), PATHINFO_FILENAME);
+                // this is needed to safely include the file name as part of the URL
+
+                // First method to set file name, plus add slug and unique file name
+                // $safeFilename = $slugger->slug($originalFileName);
+                // $FileNamePlusSlug = $safeFilename.'-'.uniqid().'.'.$imagefile->guessExtension();
+                
+                // another unique name like md5
+                $uniqueFilename =  md5(uniqid()) . '.' . $imagefile->guessExtension();
+            }
+
+            // Move the file to the directory where brochures are stored (in config/services.yaml)
+            $imagefile->move(
+                $this->getParameter('broucher_directory'),
+                $uniqueFilename
+               
+            );
+            
+            $dish->setImage($uniqueFilename);
             $entityManager->persist($dish);
             $entityManager->flush();
+            $this->addFlash('imagesuccess', 'Image Uploaded Successfully');
             return $this->redirect($this->generateUrl('appdishes.dish'));
         }
 
@@ -95,5 +120,21 @@ class DishesController extends AbstractController
         $this->addFlash('success', 'Deleted Successfully');
 
         return $this->redirect($this->generateUrl('appdishes.dish'));
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @Route("/show/{id}", name="show")
+     */
+    public function show(Dishes $dishes){
+        // In parameters, we can also do same we did in remove, but it's another short method called @paramconverter
+        // using paramconverter, we can easily access, id, name and all fields in database
+        
+        // dump($dishes);
+        // die();
+        return $this->render('dishes/show.html.twig', [
+            'showdish' => $dishes,
+        ]);
     }
 }
