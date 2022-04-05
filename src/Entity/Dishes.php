@@ -25,17 +25,26 @@ class Dishes
     /**
      * @ORM\Column(type="string", length=255)
      */
+
+    //  here ManyToOne becasue Many dishes belongs to one category
+    /**
+     * Undocumented variable
+     *
+     * @ORM\ManyToOne(targetEntity="App\Entity\Category", inversedBy="dishes")
+     */
+    private $category;
+
     private $Description;
 
     /**
-     * @ORM\Column(type="float", nullable=true)
+     * @ORM\Column(type="float")
      */
-    private $Price;
+    private $price;
 
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $Image;
+    private $image;
 
     public function getId(): ?int
     {
@@ -68,25 +77,39 @@ class Dishes
 
     public function getPrice(): ?float
     {
-        return $this->Price;
+        return $this->price;
     }
 
-    public function setPrice(?float $Price): self
+    public function setPrice(float $price): self
     {
-        $this->Price = $Price;
+        $this->price = $price;
 
         return $this;
     }
 
     public function getImage(): ?string
     {
-        return $this->Image;
+        return $this->image;
     }
 
-    public function setImage(string $Image): self
+    public function setImage(string $image): self
     {
-        $this->Image = $Image;
+        $this->image = $image;
 
         return $this;
     }
+
+    public function getCategory(): ?Category
+    {
+        return $this->category;
+    }
+
+    public function setCategory(?Category $category): self
+    {
+        $this->category = $category;
+
+        return $this;
+    }
+
+    
 }

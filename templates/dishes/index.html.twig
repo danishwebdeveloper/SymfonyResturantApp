@@ -25,6 +25,7 @@
             <tr>
                 <td>Order No: </td>
                 <td>Dish Name:</td>
+                <td>Dish Category:</td>
                 <td>Dish Detail: </td>
                 <td>Dish Price: </td>
                 <td>Delete </td>
@@ -36,9 +37,10 @@
                 <tr>
                     <td>{{ dish.id }}</td>
                     <td><a href="{{ path('appdishes.show', {id: dish.id}) }}">{{dish.name}}</a></td>
-                    <td>{{ dish.name }}</td>
+                    <td>{{ dish.Category }}</td> {# happened because of relation between them #}
                     <td>{{ dish.description }}</td>
-                    <td>{{ dish.Price }}</td>
+                    <td>{{ dish.price}}</td>
+                    {# <td>price</td> #}
                     <td><a href="{{ path('appdishes.delete', {id : dish.id}) }}">Delete</a></td>
                     <td>X2</td>
                 </tr>

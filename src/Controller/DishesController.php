@@ -6,7 +6,6 @@ use App\Entity\Dishes;
 use App\Form\DishesFormType;
 use App\Repository\DishesRepository;
 use Doctrine\Persistence\ManagerRegistry;
-use Symfony\Bridge\Doctrine\ManagerRegistry as DoctrineManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -58,7 +57,7 @@ class DishesController extends AbstractController
             // Image Upload
             $imagefile = $form->get('attachment')->getData();
             if($imagefile){
-                $originalFileName = pathinfo($imagefile->getClientOriginalName(), PATHINFO_FILENAME);
+                // $originalFileName = pathinfo($imagefile->getClientOriginalName(), PATHINFO_FILENAME);
                 // this is needed to safely include the file name as part of the URL
 
                 // First method to set file name, plus add slug and unique file name
@@ -73,7 +72,6 @@ class DishesController extends AbstractController
             $imagefile->move(
                 $this->getParameter('broucher_directory'),
                 $uniqueFilename
-               
             );
             
             $dish->setImage($uniqueFilename);
