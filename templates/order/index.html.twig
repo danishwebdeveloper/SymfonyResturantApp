@@ -1,0 +1,73 @@
+{% extends 'base.html.twig' %}
+
+    {% block body %}
+    
+        {# flash message #}
+        {% for message in app.flashes('success') %}
+            <div class="alert alert-success">
+                {{ message }}
+            </div>
+        {% endfor %}
+
+        {% set summe = 0 %}
+    
+        <br>
+        <div class="container">
+            <h2>Your Order</h2>
+            <br>
+    
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <td>Order Nr.</td>
+                        <td>Name</td>
+                        <td>Price</td>
+                        <td>Status</td>
+                        <td></td>
+                    </tr>
+                </thead>
+    
+                <tbody>
+                    {% for order in orders %}
+                        {% set summe = summe + order.orderprice %}
+                        <tr>
+                            <td>{{order.ornernumber}}</td>
+                            <td>{{order.ordername}}</td>
+                            <td>{{order.orderprice}}</td>
+
+                            {% if not is_granted('IS_AUTHENTICATED_FULLY') %}
+                                <td>{{order.orderstatus}}</td>
+                            {% endif %}
+                            {# Only visible to authenticated user #}
+                            {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                            <td>
+                                <div class="dropdown">
+  <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+    {{ order.orderstatus }}
+  </button>
+  <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+    <li><a class="dropdown-item" href="{{ path('status', {id: order.id, status: 'open'}) }}">Open</a></li>
+    <li><a class="dropdown-item" href="{{ path('status', {id: order.id, status: 'close'}) }}">Close</a></li>
+    <li><a class="dropdown-item" href="{{ path('status', {id: order.id, status: 'active'}) }}">Active</a></li>
+  </ul>
+</div>
+                        </div>
+                        </td>
+                            {% endif %}
+                            {# Only show when status is open #}
+                            {% if order.orderstatus != "close" %}
+                        <td><a class="btn btn-outline-danger btn-sm" href="{{ path('deleteorder', {id:order.id}) }}">Delete</a></td>
+                            {% endif %}
+                        </tr>
+                    {% endfor %}
+                    <td></td>
+                    <td></td>
+                    <td>{{ summe }}
+                        EUR</td>
+                    <td></td>
+                    <td></td>
+                </tbody>
+            </table>
+        </div>
+    {% endblock %}
+    

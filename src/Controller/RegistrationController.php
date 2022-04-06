@@ -53,7 +53,7 @@ class RegistrationController extends AbstractController
             // before redirect make a addFlash message
             $this->addFlash('usersuccess', 'Successfully Login');
             // redirect after save the data in the database
-            return $this->redirect($this->generateUrl('app_home '));
+            return $this->redirect($this->generateUrl('app_home'));
             
 
         }
