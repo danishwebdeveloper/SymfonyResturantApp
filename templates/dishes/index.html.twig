@@ -16,6 +16,15 @@
             {{ message }}
         </div>
     {% endfor %}
+
+    
+    {# flash message for the login #}
+    {% for message in app.flashes('usersuccess') %}
+        <div class="alert alert-success">
+            {{ message }}
+        </div>
+    {% endfor %}
+
     {# Display All dishes #}
     <div class="container">
    
