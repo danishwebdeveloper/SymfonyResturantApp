@@ -13,13 +13,15 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
+
 
 class RegistrationController extends AbstractController
 {
     /**
      * @Route("/reg", name="app_reg")
      */
-    public function registration(Request $request, UserPasswordHasherInterface $passwordhasher, ManagerRegistry $doctrine): Response
+    public function registration(Request $request, UserPasswordHasherInterface $passwordhasher, ManagerRegistry $doctrine, ValidatorInterface $validatorInterface): Response
     {
         $regForm = $this->createFormBuilder()
         ->add('username', TextType::class, [
@@ -41,15 +43,29 @@ class RegistrationController extends AbstractController
 
             $user = new User();
             $user->setUsername($getform['username']);
+
+            // Validation with the username
+            $user->setnamevalidation($getform['username']);
             $user->setPassword(
                 $passwordhasher->hashPassword($user, $getform['password'])
             );
 
-            // now store in the database, need entity manager
+            // here we set validation before submitting
+            $user->setRawPassword($getform['password']);
+            $errors = $validatorInterface->validate($user);
+            if(count($errors) > 0)
+            {
+                return $this->render('registration/index.html.twig', [
+                    'regForm' => $regForm->createView(),
+                    'errors' => $errors
+                ]);
+            }
+            else{
+                 // now store in the database, need entity manager
             $entityManager = $doctrine->getManager();
             $entityManager->persist($user);
             $entityManager->flush();
-            
+            }
             // before redirect make a addFlash message
             $this->addFlash('usersuccess', 'Successfully Login');
             // redirect after save the data in the database
@@ -60,7 +76,8 @@ class RegistrationController extends AbstractController
 
         // pass this form to the twig template
         return $this->render('registration/index.html.twig', [
-            'regForm' => $regForm->createView()         
+            'regForm' => $regForm->createView(),
+            'errors' => null // of not pass it will give error bcz we did validation above         
         ]);
     }
 }
