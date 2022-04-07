@@ -38,6 +38,7 @@ security:
         - { path: ^/app_login, roles: IS_AUTHENTICATED_ANONYMOUSLY } #give acces to all
         - { path: ^/dish, roles: ROLE_USER }
         - { path: ^/reg, roles: ROLE_USER } #register employee link also only accessable to valid user role
+        - { path: ^/admin, roles: ROLE_USER }
 
 when@test:
     security:

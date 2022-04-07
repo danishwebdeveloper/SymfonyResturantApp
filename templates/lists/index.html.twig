@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+
+{% block body %}
+    <br>
+    <div class="container">
+    <h2>Lists</h2>
+    <br>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>City</th>
+                <th>Telephone</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for list in lists %}
+            <tr>
+                <td>{{ list.id }}</td>
+                <td>{{ list.name }}</td>
+                <td>{{ list.city }}</td>
+                <td>{{ list.telephone }}</td>
+                <td>
+                    <a href="{{ path('app_lists_show', {'id': list.id}) }}">show</a>
+                    <a href="{{ path('app_lists_edit', {'id': list.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="5">No Records Found!</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_lists_new') }}">Create new</a>
+    </div   >
+{% endblock %}
