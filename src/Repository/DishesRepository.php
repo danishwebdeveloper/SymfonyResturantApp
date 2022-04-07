@@ -45,6 +45,26 @@ class DishesRepository extends ServiceEntityRepository
         }
     }
 
+    // Make our own Query Bulilder, Like get record which price is less than 5 or anything you want
+    public function findFiveEur(int $id)
+    {
+        // We can also follow the below
+        $qb = $this->createQueryBuilder('d');
+        $qb->select('d.id, d.price')
+        ->where('d.price <= 5');
+        return $qb->getQuery()->getResult();
+        
+    //     return $this
+    // ->createQueryBuilder('dis')
+    // ->select('dis.id, dis.price')
+    // ->andWhere('dis.price <= 5')
+    // ->getQuery()
+    // ->getResult();
+        
+    }
+
+
+
     // /**
     //  * @return Dishes[] Returns an array of Dishes objects
     //  */

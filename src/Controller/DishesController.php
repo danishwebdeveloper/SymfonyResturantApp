@@ -135,4 +135,16 @@ class DishesController extends AbstractController
             'showdish' => $dishes,
         ]);
     }
+
+    /**
+     * Undocumented function
+     *
+     * @param [type] $id
+     * @Route("/price/{id}", name="price")
+     */
+    public function price($id, DishesRepository $dishesRepository)
+    {
+            $dishes = $dishesRepository->findFiveEur($id);
+            dd($dishes);
+    }
 }
